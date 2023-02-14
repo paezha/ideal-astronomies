@@ -90,7 +90,7 @@ full_width = ncol(half_ring_slice)
 ```
 
 This function (also copied from Tyler’s code) reads the slice of the
-ring and returns the values for color and transparencey:
+ring and returns the values for color and transparency:
 
 ``` r
 return_texture = function(i, j, k) {
@@ -123,6 +123,8 @@ for(i in 1:nrow(texture_mat)) {
 texture_mat_small = render_resized(texture_mat,
                                    mag = 0.2)
 ```
+
+## Render scene
 
 The rings are the most tricky part of the code. The rest simply involves
 rayrendering the celestial bodies (here a “planet” and a “satellite”):
@@ -177,4 +179,4 @@ celestial_model |>
                sample_method = "sobol")
 ```
 
-<img src="outputs/reasonable-astronomy-52981811.png" width="800px" />
+<img src="outputs/reasonable-astronomy-69272470.png" width="800px" />

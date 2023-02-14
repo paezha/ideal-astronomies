@@ -127,7 +127,7 @@ padding = 66900/inc
 full_width = ncol(half_ring_slice)
 ```
 
-This function (also copied from Tyler's code) reads the slice of the ring and returns the values for color and transparencey:
+This function (also copied from Tyler's code) reads the slice of the ring and returns the values for color and transparency:
 ```{r}
 return_texture = function(i, j, k) {
   distanceval = (sqrt((i - full_width-1)^2 + (j - full_width - 1)^2) + 1 ) * (padding + full_width)/full_width
@@ -157,6 +157,8 @@ for(i in 1:nrow(texture_mat)) {
 texture_mat_small = render_resized(texture_mat,
                                    mag = 0.2)
 ```
+
+## Render scene
 
 The rings are the most tricky part of the code. The rest simply involves rayrendering the celestial bodies (here a "planet" and a "satellite"): 
 ```{r}
