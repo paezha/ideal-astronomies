@@ -5,10 +5,15 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
+# knitr options
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# Packages for README but not for generative system
+library(cowplot)
+library(ggplot2)
 ```
 
 # Ideal Astronomies
@@ -18,18 +23,70 @@ knitr::opts_chunk$set(
 
 I love photographies of celestial bodies and have for some time wondered if I could do a generative system to capture the sense of awe that these photos elicit. See for example:
 
-https://deepspace.social/@hourlycosmos/109854013279669354
+```{r fig01, echo=FALSE, out.width="300px"}
 
-https://deepspace.social/@hourlycosmos/109810366440473863
+# Create empty ggplot object with caption
+fig01 <-  ggplot() +
+  labs(caption = "Source: https://mastodon.online/@hourlycosmos@deepspace.social/109860384723025685") +
+  theme_void() +
+  theme(plot.caption = element_text(size = 15))
 
-https://deepspace.social/@hourlycosmos/109800457272267375
+# Draw image and empty ggplot object
+ggdraw() +
+  draw_image("inputs/109860384723025685.jpg",
+             y = 0.05) +
+  draw_plot(fig01)
+```
+
+```{r fig02, echo=FALSE, out.width="300px"}
+# Create empty ggplot object with caption
+fig02 <-  ggplot() +
+  labs(caption = "Source: https://deepspace.social/@hourlycosmos/109854013279669354") +
+  theme_void() +
+  theme(plot.caption = element_text(size = 15))
+
+# Draw image and empty ggplot object
+ggdraw() +
+  draw_image("inputs/109854013279669354.jpeg",
+             y = 0.05) +
+  draw_plot(fig02)
+```
+
+```{r fig03, echo=FALSE, out.width="300px"}
+# Create empty ggplot object with caption
+fig03 <-  ggplot() +
+  labs(caption = "Source: https://deepspace.social/@hourlycosmos/109810366440473863") +
+  theme_void() +
+  theme(plot.caption = element_text(size = 15))
+
+# Draw image and empty ggplot object
+ggdraw() +
+  draw_image("inputs/109810366440473863.jpeg",
+             y = 0.05) +
+  draw_plot(fig03)
+```
+
+```{r fig04, echo=FALSE, out.width="300px"}
+# Create empty ggplot object with caption
+fig04 <-  ggplot() +
+  labs(caption = "Source: https://deepspace.social/@hourlycosmos/109800457272267375") +
+  theme_void() +
+  theme(plot.caption = element_text(size = 15))
+
+# Draw image and empty ggplot object
+ggdraw() +
+  draw_image("inputs/109800457272267375.jpeg",
+             y = 0.05) +
+  draw_plot(fig04)
+```
+
 
 
 Well, I just discovered that Tyler Morgan-Wall has a tutorial to [rayrender Saturn](https://www.tylermw.com/tutorial-visualizing-saturns-appearance-from-earth-in-r/) with all its amazing rings!
 
 Tyler's code made it a (relative) breeze to create some ideal astronomies. Where he used the texture and accurate positions of Saturn and the rings, I simply create some ellipsoids and simulate the rings. This creates a minimalistic (and clearly artificial) planetscape with a few fun random parameters. 
 
-The system uses [{rayimage}]() and [{rayrender}]() packages. Packages {here} and {glue} are simply for managing saves:
+The system uses [{rayimage}](https://www.rayimage.dev/) and [{rayrender}](https://www.rayrender.net/index.html) packages. Packages {here} and {glue} are simply for managing saves:
 ```{r}
 library(glue)
 library(here)
@@ -152,7 +209,7 @@ celestial_model |>
                sample_method = "sobol")
 ```
 
-```{r echo=FALSE, out.width="500px"}
+```{r echo=FALSE, out.width="800px"}
 # Display image
 knitr::include_graphics(glue("outputs/reasonable-astronomy-{seed}.png"))
 ```
