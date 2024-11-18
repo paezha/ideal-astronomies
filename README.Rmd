@@ -207,7 +207,7 @@ celestial_model |>
                lookat = c(0, mean(celestial_model$y), mean(celestial_model$z)),
                width = 2000,
                height = 1600,
-               clamp_value = 1,
+               clamp_value = 1.1,
                sample_method = "sobol")
 ```
 

@@ -1,73 +1,55 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
 
 # Ideal Astronomies
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-I love photographies of celestial bodies and have for some time wondered
-if I could do a generative system to capture the sense of awe that these
-photos elicit. See for example:
+I love photographies of celestial bodies and have for some time wondered if I could do a generative system to capture the sense of awe that these photos elicit. See for example:
 
-<img src="README_files/figure-gfm/fig01-1.png" width="300px" />
+<img src="figure/fig01-1.png" alt="plot of chunk fig01" width="300px" />
 
-<img src="README_files/figure-gfm/fig02-1.png" width="300px" />
+<img src="figure/fig02-1.png" alt="plot of chunk fig02" width="300px" />
 
-<img src="README_files/figure-gfm/fig03-1.png" width="300px" />
+<img src="figure/fig03-1.png" alt="plot of chunk fig03" width="300px" />
 
-<img src="README_files/figure-gfm/fig04-1.png" width="300px" />
+<img src="figure/fig04-1.png" alt="plot of chunk fig04" width="300px" />
 
-Well, I just discovered that Tyler Morgan-Wall has a tutorial to
-[rayrender
-Saturn](https://www.tylermw.com/tutorial-visualizing-saturns-appearance-from-earth-in-r/)
-with all its amazing rings!
 
-Tyler’s code made it a (relative) breeze to create some ideal
-astronomies. Where he used the texture and accurate positions of Saturn
-and the rings, I simply create some ellipsoids and simulate the rings.
-This creates a minimalistic (and clearly artificial) planetscape with a
-few fun random parameters.
 
-The system uses [{rayimage}](https://www.rayimage.dev/) and
-[{rayrender}](https://www.rayrender.net/index.html) packages. Packages
-{here} and {glue} are simply for managing saves:
+Well, I just discovered that Tyler Morgan-Wall has a tutorial to [rayrender Saturn](https://www.tylermw.com/tutorial-visualizing-saturns-appearance-from-earth-in-r/) with all its amazing rings!
 
-``` r
+Tyler's code made it a (relative) breeze to create some ideal astronomies. Where he used the texture and accurate positions of Saturn and the rings, I simply create some ellipsoids and simulate the rings. This creates a minimalistic (and clearly artificial) planetscape with a few fun random parameters. 
+
+The system uses [{rayimage}](https://www.rayimage.dev/) and [{rayrender}](https://www.rayrender.net/index.html) packages. Packages {here} and {glue} are simply for managing saves:
+
+```r
 library(glue)
 library(here)
-#> here() starts at C:/Antonio/Rtistry/ideal-astronomies
 library(rayimage)
 library(rayrender)
-#> 
-#> Attaching package: 'rayrender'
-#> The following object is masked from 'package:ggplot2':
-#> 
-#>     arrow
 ```
 
 ## Generate a random seed
 
-``` r
+
+```r
 seed <- sample.int(100000000, 1)
 ```
 
 ## Simulate rings
 
-To simulate the rings I use as a template Tyler’s code for processing
-the [texture]() of the rings of Saturn. A four-dimensional array
-simulates a slice of the rings, 125 pixels in width and 2048 pixels in
-depth (this would be the ring in the direction away from the planet).
+To simulate the rings I use as a template Tyler's code for processing the [texture]() of the rings of Saturn. A four-dimensional array simulates a slice of the rings, 125 pixels in width and 2048 pixels in depth (this would be the ring in the direction away from the planet). 
 
-Saturn’s rings have several subdivisions with different widths and
-thicknesses. The simulated rings here have three sections: first,
-second, and third rings (`fr`, `sr`, and `tr`, respectively), and each
-will have a different parameter for the transparency of the ring (coded
-in `alpha`). The padding and other parameters are copied from Tyler’s
-code, where they are accurate representations of the dimensions of the
-rings of Saturn.
+Saturn's rings have several subdivisions with different widths and thicknesses. The simulated rings here have three sections: first, second, and third rings (`fr`, `sr`, and `tr`, respectively), and each will have a different parameter for the transparency of the ring (coded in `alpha`). The padding and other parameters are copied from Tyler's code, where they are accurate representations of the dimensions of the rings of Saturn.
 
-``` r
+```r
 set.seed(seed)
 
 full_ring_slice <- array(1, c(125, 2048, 4))
@@ -89,10 +71,9 @@ padding = 66900/inc
 full_width = ncol(half_ring_slice)
 ```
 
-This function (also copied from Tyler’s code) reads the slice of the
-ring and returns the values for color and transparency:
+This function (also copied from Tyler's code) reads the slice of the ring and returns the values for color and transparency:
 
-``` r
+```r
 return_texture = function(i, j, k) {
   distanceval = (sqrt((i - full_width-1)^2 + (j - full_width - 1)^2) + 1 ) * (padding + full_width)/full_width
   frac = distanceval - floor(distanceval)
@@ -105,10 +86,9 @@ return_texture = function(i, j, k) {
 }
 ```
 
-A texture matrix is initialized and the transparency is read from the
-slice of ring with the function `return_texture`:
+A texture matrix is initialized and the transparency is read from the slice of ring with the function `return_texture`:
 
-``` r
+```r
 texture_mat <- array(1,
                      c(2 * (full_width),
                        2 * (full_width),
@@ -126,10 +106,9 @@ texture_mat_small = render_resized(texture_mat,
 
 ## Render scene
 
-The rings are the most tricky part of the code. The rest simply involves
-rayrendering the celestial bodies (here a “planet” and a “satellite”):
+The rings are the most tricky part of the code. The rest simply involves rayrendering the celestial bodies (here a "planet" and a "satellite"): 
 
-``` r
+```r
 set.seed(seed)
 
 # Choose if the rings will be white or black matter
@@ -175,8 +154,14 @@ celestial_model |>
                lookat = c(0, mean(celestial_model$y), mean(celestial_model$z)),
                width = 2000,
                height = 1600,
-               clamp_value = 1,
+               clamp_value = 1.1,
                sample_method = "sobol")
+#> --------------------------Interactive Mode Controls---------------------------
+#> W/A/S/D: Horizontal Movement: | Q/Z: Vertical Movement | Up/Down: Adjust FOV | ESC: Close
+#> Left/Right: Adjust Aperture  | 1/2: Adjust Focal Distance | 3/4: Rotate Environment Light 
+#> P: Print Camera Info | R: Reset Camera |  TAB: Toggle Orbit Mode |  E/C: Adjust Step Size
+#> K: Save Keyframe | L: Reset Camera to Last Keyframe (if set) | F: Toggle Fast Travel Mode
+#> Left Mouse Click: Change Look At (new focal distance) | Right Mouse Click: Change Look At
 ```
 
-<img src="outputs/reasonable-astronomy-69272470.png" width="800px" />
+<img src="outputs/reasonable-astronomy-44806442.png" alt="plot of chunk unnamed-chunk-8" width="800px" />
